@@ -11,7 +11,7 @@
   A00000000000000000000005 = {isa = PBXGroup; children = (); path = Products; sourceTree = "<group>";};
   A00000000000000000000006 = {isa = PBXGroup; children = (); name = Frameworks; sourceTree = "<group>";};
   A00000000000000000000007 = {isa = PBXGroup; children = (); name = Resources; sourceTree = "<group>";};
-  A00000000000000000000008 = {isa = PBXGroup; children = (); name = Supporting Files; sourceTree = "<group>";};
+  A00000000000000000000008 = {isa = PBXGroup; children = (); name = "Supporting Files"; sourceTree = "<group>";};
   A00000000000000000000009 = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FamilyStory.app; sourceTree = BUILT_PRODUCTS_DIR;};
   A00000000000000000000011 = {isa = XCConfigurationList; buildConfigurations = (A00000000000000000000012,A00000000000000000000013,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
   A00000000000000000000012 = {isa = XCBuildConfiguration; buildSettings = {IPHONEOS_DEPLOYMENT_TARGET = 17.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.9; PRODUCT_BUNDLE_IDENTIFIER = com.hieuthieudx79.FamilyStory; PRODUCT_NAME = "$(TARGET_NAME)"; TARGETED_DEVICE_FAMILY = "1,2"; INFOPLIST_FILE = FamilyStory/Info.plist; GENERATE_INFOPLIST_FILE = NO; CODE_SIGNING_ALLOWED = NO;}; name = Debug;};
