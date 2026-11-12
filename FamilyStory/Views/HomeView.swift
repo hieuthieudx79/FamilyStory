@@ -2,14 +2,19 @@ import SwiftUI
 import SwiftData
 
 struct HomeView: View {
-    @Environment(\.modelContext) private var context
-    @Query(sort: \\Memory.recordedAt, order: .reverse) private var memories: [Memory]
+    @Query(sort: \Memory.recordedAt, order: .reverse) private var memories: [Memory]
     @State private var showingRecorder = false
     @State private var searchText = ""
 
     private var filtered: [Memory] {
-        guard !searchText.isEmpty else { return memories }
-        return memories.filter { $0.title.localizedCaseInsensitiveContains(searchText) || $0.notes.localizedCaseInsensitiveContains(searchText) }
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else { return memories }
+        return memories.filter { memory in
+            memory.title.localizedCaseInsensitiveContains(query)
+                || memory.notes.localizedCaseInsensitiveContains(query)
+                || memory.transcript.localizedCaseInsensitiveContains(query)
+                || memory.people.contains { $0.name.localizedCaseInsensitiveContains(query) }
+        }
     }
 
     var body: some View {
@@ -39,8 +44,16 @@ struct HomeView: View {
 
                 HStack(spacing: 10) {
                     Image(systemName: "magnifyingglass").foregroundStyle(FamilyPalette.sepia)
-                    TextField("Tìm trong ký ức...", text: $searchText)
+                    TextField("Tìm câu chuyện, người thân, nội dung...", text: $searchText)
                         .font(.system(size: 14))
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                    if !searchText.isEmpty {
+                        Button { searchText = "" } label: {
+                            Image(systemName: "xmark.circle.fill").foregroundStyle(FamilyPalette.sepia)
+                        }
+                        .accessibilityLabel("Xóa tìm kiếm")
+                    }
                 }
                 .padding(14)
                 .background(FamilyPalette.linen.opacity(0.7), in: RoundedRectangle(cornerRadius: 13))
@@ -79,15 +92,14 @@ struct HomeView: View {
                 }
             }
         }
-        .navigationTitle("")
-        .sheet(isPresented: $showingRecorder) {
-            RecorderView()
-        }
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingRecorder) { RecorderView() }
     }
 }
 
 struct MemoryRow: View {
     let memory: Memory
+
     var body: some View {
         HStack(spacing: 14) {
             RoundedRectangle(cornerRadius: 13)
@@ -95,10 +107,19 @@ struct MemoryRow: View {
                 .frame(width: 58, height: 58)
                 .overlay(Image(systemName: "waveform").font(.system(size: 20)).foregroundStyle(FamilyPalette.olive))
             VStack(alignment: .leading, spacing: 5) {
-                Text(memory.title).font(.system(size: 16, weight: .medium, design: .serif)).foregroundStyle(FamilyPalette.ink).lineLimit(1)
-                Text(memory.recordedAt.formatted(date: .abbreviated, time: .omitted))
-                    .font(.system(size: 11)).foregroundStyle(FamilyPalette.sepia)
-                if !memory.notes.isEmpty {
+                Text(memory.title)
+                    .font(.system(size: 16, weight: .medium, design: .serif))
+                    .foregroundStyle(FamilyPalette.ink)
+                    .lineLimit(1)
+                Text(memory.eventDate ?? memory.recordedAt, format: .dateTime.day().month(.abbreviated).year())
+                    .font(.system(size: 11))
+                    .foregroundStyle(FamilyPalette.sepia)
+                if !memory.people.isEmpty {
+                    Text(memory.people.map(\.name).joined(separator: " · "))
+                        .font(.system(size: 11))
+                        .foregroundStyle(FamilyPalette.olive)
+                        .lineLimit(1)
+                } else if !memory.notes.isEmpty {
                     Text(memory.notes).font(.system(size: 12)).foregroundStyle(FamilyPalette.sepia).lineLimit(1)
                 }
             }

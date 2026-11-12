@@ -1,5 +1,4 @@
 import SwiftUI
-import SwiftData
 
 struct RootView: View {
     @AppStorage("hasCreatedArchive") private var hasCreatedArchive = false
@@ -11,13 +10,13 @@ struct RootView: View {
                 WelcomeView { hasCreatedArchive = true }
             } else {
                 TabView(selection: $selectedTab) {
-                    HomeView()
+                    NavigationStack { HomeView() }
                         .tabItem { Label("Ký ức", systemImage: "books.vertical") }
                         .tag(0)
-                    PeopleView()
+                    NavigationStack { PeopleView() }
                         .tabItem { Label("Gia đình", systemImage: "person.2") }
                         .tag(1)
-                    SettingsView()
+                    NavigationStack { SettingsView() }
                         .tabItem { Label("Lưu trữ", systemImage: "archivebox") }
                         .tag(2)
                 }
@@ -66,6 +65,9 @@ struct WelcomeView: View {
                     Text("Không cần tài khoản · Lưu trên thiết bị")
                         .font(.system(size: 11))
                         .foregroundStyle(FamilyPalette.sepia)
+                    Text("Bạn có thể xuất bản sao lưu bất cứ lúc nào.")
+                        .font(.system(size: 10))
+                        .foregroundStyle(FamilyPalette.sepia.opacity(0.9))
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 35)
