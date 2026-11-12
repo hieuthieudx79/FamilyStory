@@ -2,21 +2,25 @@
 
 **Keep Their Voices Forever.**
 
-A private, audio-first family memory archive for iOS. Family Story is local-first, offline-first, and privacy-first.
+A private, audio-first family memory archive for iOS. The app is local-first, offline-first, and privacy-first.
 
 ## Tier 1 MVP
 
-- SwiftUI native app; iOS 17+ baseline.
-- Local archive without account registration or backend.
-- Record, pause/resume, save and play original audio.
-- Editable story title, notes and date.
-- Local chronological memory library and metadata search.
-- Capability-gated transcription / on-device AI adapters; neither is required for recording.
-- Export/import are staged for the next implementation slice.
+- Native SwiftUI app targeting iOS 17+.
+- Create a local archive without account registration.
+- Record original audio with pause/resume and interruption feedback.
+- Attach a title, notes, event date, and family members to a memory.
+- Browse a chronological memory timeline and search titles, notes, transcripts, and people.
+- Play, seek, and review the original recording.
+- Add a photo from Photos; the app stores a copy in its local archive.
+- Request on-device speech transcription when the selected locale and device support it.
+- Export/import a complete .familyarchive package through Files or the iOS Share Sheet.
+- Validate package paths and SHA-256 checksums before import; duplicate memory IDs are skipped rather than overwritten.
+- View archive storage usage and delete the local archive.
 
 ## Visual direction — Quiet nostalgia
 
-A restrained archival palette: warm paper, aged linen, sepia ink, muted olive and terracotta accents. Editorial typography, generous whitespace, fine rules, softly rounded surfaces. Avoid bright gradients, glossy effects and overly playful UI.
+Warm paper, aged linen, sepia ink, muted olive and terracotta accents. Editorial serif headlines, generous whitespace, fine rules, calm controls and softly rounded surfaces.
 
 | Token | Hex | Use |
 |---|---|---|
@@ -30,14 +34,27 @@ A restrained archival palette: warm paper, aged linen, sepia ink, muted olive an
 
 ## Build
 
-Open `FamilyStory.xcodeproj` in Xcode 16 or later. Select the FamilyStory scheme and an iOS 17+ simulator/device.
+Open FamilyStory.xcodeproj in Xcode 16 or later. Select the FamilyStory scheme and an iOS 17+ simulator/device.
 
-No third-party packages or network services are required.
+A GitHub Actions workflow builds the app for the iOS Simulator on pushes and pull requests. This repository does not require third-party packages or network services.
 
-## Privacy
+## Local data and privacy
 
-The app stores archive metadata and media in its app-private Documents directory. “Local-first” does not disable iOS device backups or prevent copies created through a user-selected export/share destination. No remote upload or cloud AI API is implemented.
+Archive metadata is stored using SwiftData. Audio and photo copies live under the app's Documents/FamilyStory directory. Speech recognition is configured to require on-device processing; if the OS cannot satisfy that requirement, the transcript action fails with an explanation and the original audio remains available.
 
-## Current scope
+“Local-first” does not disable iOS device backups or prevent copies created through a user-selected export/share destination. The user controls those destinations. No proprietary backend, remote media upload, or cloud AI API is implemented.
 
-This repository starts the iOS MVP foundation: onboarding, archive home, memory list/detail, people list, and a working AVFoundation recording/playback path. Transcription and Foundation Models remain capability-gated follow-up work.
+## Archive format
+
+.familyarchive is a ZIP container using uncompressed entries, with:
+- manifest.json (schema version 1)
+- Audio/<filename> original audio
+- Photos/<filename> copied images
+
+The importer rejects unsupported versions, unsafe paths, undeclared files, invalid references, CRC failures, and SHA-256 mismatches. Existing memory IDs are skipped; current records are not silently overwritten.
+
+## Current implementation boundaries
+
+On-device transcription uses Apple's Speech framework with requiresOnDeviceRecognition = true. Speech recognition remains optional and language/device support varies. Foundation Models title and summary suggestions, a robust interrupted-recording recovery screen, advanced archive merge UI, StoreKit unlock, accessibility audit, privacy manifest review, and App Store submission work remain follow-up items.
+
+Before release, run simulator and physical-device QA, especially recording interruptions, low storage, import duplicates, and restore from a clean install.

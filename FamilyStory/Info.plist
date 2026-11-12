@@ -4,9 +4,40 @@
 <dict>
     <key>NSMicrophoneUsageDescription</key>
     <string>Family Story cần micro để lưu giữ giọng nói và câu chuyện của người thân.</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Family Story sử dụng nhận dạng giọng nói trên thiết bị để tạo bản chép lời khi iPhone hỗ trợ.</string>
     <key>UILaunchScreen</key>
     <dict/>
     <key>UIUserInterfaceStyle</key>
     <string>Light</string>
+    <key>UTExportedTypeDeclarations</key>
+    <array>
+        <dict>
+            <key>UTTypeIdentifier</key>
+            <string>com.hieuthieudx79.familystory.archive</string>
+            <key>UTTypeDescription</key>
+            <string>Family Story Archive</string>
+            <key>UTTypeConformsTo</key>
+            <array>
+                <string>public.data</string>
+            </array>
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array><string>familyarchive</string></array>
+            </dict>
+        </dict>
+    </array>
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeName</key>
+            <string>Family Story Archive</string>
+            <key>LSItemContentTypes</key>
+            <array><string>com.hieuthieudx79.familystory.archive</string></array>
+            <key>LSHandlerRank</key>
+            <string>Owner</string>
+        </dict>
+    </array>
 </dict>
 </plist>
